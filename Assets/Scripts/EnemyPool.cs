@@ -8,7 +8,8 @@ public class EnemyPool : MonoBehaviour
     [SerializeField] private int poolCount = 3;
     [SerializeField] private bool autoExpand = false;
     [SerializeField] private Enemy enemyPrefab;
-    [SerializeField] private float periodTime = 5f;
+    [SerializeField] private float startTimeBtwSpawns;
+    private float timeBtwSpawns;
 
     private PoolOfObjects<Enemy> pool;
 
@@ -19,23 +20,23 @@ public class EnemyPool : MonoBehaviour
     {
         this.pool = new PoolOfObjects<Enemy> (this.enemyPrefab, this.poolCount, this.transform);
         this.pool.autoExpand = autoExpand;
+
+        timeBtwSpawns = startTimeBtwSpawns;
+        CreateEnemy();
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        this.StartCoroutine("CreateRoutine");
-    }
+        if (timeBtwSpawns <= 0)
+        {
+            CreateEnemy();
+            timeBtwSpawns = startTimeBtwSpawns;
+        }
 
-    private void OnDisable()
-    {
-        this.StopCoroutine("CreateRoutine");
-    }
-
-    private IEnumerator CreateRoutine()
-    {
-        yield return new WaitForSeconds(periodTime);
-
-        this.CreatedEnemy();
+        else
+        {
+            timeBtwSpawns -= Time.deltaTime;
+        }
     }
 
 
@@ -46,9 +47,10 @@ public class EnemyPool : MonoBehaviour
             Transform enemyPosition = Spawn.SpawnPoints[i];
             Enemy enemy = this.pool.GetFreeElement();
             enemy.transform.position = new Vector3(enemyPosition.position.x, enemyPosition.position.y, enemyPosition.position.z);
+           
         }
 
-        CreatedEnemy?.Invoke();
+        CreatedEnemy?.Invoke(); 
     }
 
 }

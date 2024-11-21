@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float lifetime = 5f;
-    [SerializeField] private float speed = 10f;
-    [SerializeField] private Transform spawn;
+    [SerializeField] private float lifetime = 10f;
+    [SerializeField] private float speed = 1f;
+    
 
 
 
@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
 
     public void Move()
     {
-        gameObject.GetComponent<Rigidbody>().velocity = spawn.forward * speed;
+        gameObject.GetComponent<Rigidbody>().velocity = Vector3.forward * speed;
     }
 
 }
